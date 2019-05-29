@@ -13,4 +13,4 @@ CORE_IMAGE_EXTRA_INSTALL += " \
     tslib-calibrate \
 "
 
-IMAGE_FEATURES += " ssh-server-dropbear"
+IMAGE_FEATURES += " ssh-server-openssh"
