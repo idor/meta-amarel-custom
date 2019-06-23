@@ -10,4 +10,11 @@ do_install_append() {
     install -Dm 0644 ${WORKDIR}/${PN}.conf ${D}${sysconfdir}/${PN}.conf
 }
 
-RDEPENDS_${PN} += "html5-demo"
+RDEPENDS_${PN} += " \
+    html5-demo \
+    liberation-fonts \
+    source-han-sans-cn-fonts \
+    source-han-sans-jp-fonts \
+    source-han-sans-kr-fonts \
+    source-han-sans-tw-fonts \
+"

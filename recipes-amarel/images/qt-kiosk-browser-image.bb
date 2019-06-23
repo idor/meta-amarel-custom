@@ -2,6 +2,15 @@ LICENSE = "CLOSED"
 
 inherit core-image
 
+IMAGE_LINGUAS += " \
+    en-gb \
+    en-us \
+    es-es \
+    it-it \
+    pt-br \
+    zh-cn \
+"
+
 CORE_IMAGE_EXTRA_INSTALL += " \
     init-ifupdown \
     ca-certificates \
@@ -13,4 +22,4 @@ CORE_IMAGE_EXTRA_INSTALL += " \
     tslib-calibrate \
 "
 
-IMAGE_FEATURES += " ssh-server-dropbear"
+IMAGE_FEATURES += " ssh-server-openssh"
