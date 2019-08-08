@@ -1,0 +1,80 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          nm_monitor
+# Required-Start:    $remote_fs dbus hal
+# Required-Stop:     $remote_fs dbus hal
+# Should-Start:.     $syslog
+# Should-Stop:       $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: network connection monitor
+# Description:       Daemon for connectivity monitorring
+### END INIT INFO
+
+set -e
+
+prefix=/usr
+exec_prefix=/usr
+sbindir=/usr/sbin
+localstatedir=/var
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DESC="NetworkManager monitor service"
+NAME="nm_monitor"
+
+DAEMON=${sbindir}/$NAME
+
+PIDDIR=${localstatedir}/run/nm_monitor
+PIDFILE=$PIDDIR/$NAME.pid
+
+USER=root
+
+# Gracefully exit if the package has been removed.
+test -x $DAEMON || exit 0
+
+nm_start() {
+	if [ ! -d $PIDDIR ]; then
+		mkdir -p $PIDDIR
+		chown $USER:$USER $PIDDIR
+	fi
+
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --oknodo --background  \
+		--user $USER --make-pidfile --exec $DAEMON
+	echo "connectivity monitor daemon started"
+}
+
+nm_stop() {
+	start-stop-daemon --stop --retry 5 --quiet --pidfile $PIDFILE --oknodo  \
+		--user $USER --exec $DAEMON
+	rm -f $PIDFILE
+	killall nm_monitor  || true
+
+	/etc/init.d/NetworkManager stop
+	echo "connectivity monitor daemon stopped"
+}
+
+case "$1" in
+  start)
+	echo "Starting" "$NAME"
+	nm_start
+	;;
+  stop)
+	echo "Stopping"  "$NAME"
+	nm_stop
+	;;
+  restart)
+	echo "Restarting" "$NAME"
+	nm_stop
+	nm_start
+	;;
+  status)
+	ps | grep  nm_monitor
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|status}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
+
