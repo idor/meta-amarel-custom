@@ -101,6 +101,7 @@ nm_set_default_config() {
 	nmcli con modify $NM_SYSCON_NAME_WIFIAP wifi-sec.psk $ACCESSPASS
 	nmcli connection modify $NM_SYSCON_NAME_WIFIAP ipv4.addresses 19.168.1.1/24
 	nmcli con up $NM_SYSCON_NAME_WIFIAP
+	nmcli con modify $NM_SYSCON_NAME_WIFIAP connection.autoconnect yes
 }
 
 nm_online() {
