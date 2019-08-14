@@ -73,7 +73,7 @@ nm_set_default_config() {
 	nmcli c mod $NM_SYSCON_NAME_ETH connection.autoconnect-priority  3
 	nmcli c up $NM_SYSCON_NAME_ETH
 
-	echo configure hotsport dev $NM_SYSCON_DEV_CELL with new connection $NM_SYSCON_NAME_CELL
+	echo configure cellular dev $NM_SYSCON_DEV_CELL with new connection $NM_SYSCON_NAME_CELL
 	nmcli c add type gsm ifname $NM_SYSCON_DEV_CELL con-name $NM_SYSCON_NAME_CELL autoconnect yes apn $CELL_ADDRESS
 	nmcli c mod $NM_SYSCON_NAME_CELL connection.autoconnect-priority  1
 	# cellular APN settings, make sure how to use user/pass if needed or not
@@ -95,7 +95,7 @@ nm_set_default_config() {
 	echo configure hotspot dev $NM_SYSCON_DEV_WIFIAP with new connection $NM_SYSCON_NAME_WIFIAP
 	WIFI_MAC_ADDR="$(ifconfig eth0 | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}' | tr ":" "-")"
 	echo MAC is $WIFI_MAC_ADDR
-	nmcli con add type wifi ifname $NM_SYSCON_DEV_WIFIAP con-name $NM_SYSCON_NAME_WIFIAP autoconnect no ssid ${APN_SSIDNAME}_${WIFI_MAC_ADDR}
+	nmcli con add type wifi ifname $NM_SYSCON_DEV_WIFIAP con-name $NM_SYSCON_NAME_WIFIAP autoconnect no ssid ${APN_SSIDNAME}
 	nmcli con modify $NM_SYSCON_NAME_WIFIAP 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
 	nmcli con modify $NM_SYSCON_NAME_WIFIAP wifi-sec.key-mgmt wpa-psk
 	nmcli con modify $NM_SYSCON_NAME_WIFIAP wifi-sec.psk $ACCESSPASS
