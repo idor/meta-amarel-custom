@@ -12,7 +12,7 @@ update-rc.d -f dnsmasq remove
 ln -sf /usr/lib/jvm/java-8-oracle/jre/bin/java /usr/bin/java
 
 
-CFG_FILE=/netatim/network-settings/ipsettingsparams.cfg
+CFG_FILE=/netafim/network-settings/ipsettingsparams.cfg
 
 NM_DAEMON=/etc/init.d/NetworkManager
 NM_SYSCON_DEV_CELL=ttyUSB3
