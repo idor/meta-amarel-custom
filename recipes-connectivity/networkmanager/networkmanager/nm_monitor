@@ -12,7 +12,7 @@ update-rc.d -f dnsmasq remove
 ln -sf /usr/lib/jvm/java-8-oracle/jre/bin/java /usr/bin/java
 
 
-CFG_FILE=/netatim/network-settings/ipsettingsparams.cfg
+CFG_FILE=/netafim/network-settings/ipsettingsparams.cfg
 
 NM_DAEMON=/etc/init.d/NetworkManager
 NM_SYSCON_DEV_CELL=ttyUSB3
@@ -35,7 +35,7 @@ ACCESSPASS='password'
 CHANNEL='6'
 MLANSTATIC=19.168.1.1
 DHCP_RANGE=19.168.1.50,19.168.1.150,12h
-NM_MONITOR_PING_PERIOD=60
+NM_MONITOR_PING_PERIOD=600
 
 wait_hw() {
 	while [ ! -c /dev/$NM_SYSCON_DEV_CELL ];
@@ -73,7 +73,7 @@ nm_set_default_config() {
 	nmcli c mod $NM_SYSCON_NAME_ETH connection.autoconnect-priority  3
 	nmcli c up $NM_SYSCON_NAME_ETH
 
-	echo configure hotsport dev $NM_SYSCON_DEV_CELL with new connection $NM_SYSCON_NAME_CELL
+	echo configure cellular dev $NM_SYSCON_DEV_CELL with new connection $NM_SYSCON_NAME_CELL
 	nmcli c add type gsm ifname $NM_SYSCON_DEV_CELL con-name $NM_SYSCON_NAME_CELL autoconnect yes apn $CELL_ADDRESS
 	nmcli c mod $NM_SYSCON_NAME_CELL connection.autoconnect-priority  1
 	# cellular APN settings, make sure how to use user/pass if needed or not
@@ -95,12 +95,13 @@ nm_set_default_config() {
 	echo configure hotspot dev $NM_SYSCON_DEV_WIFIAP with new connection $NM_SYSCON_NAME_WIFIAP
 	WIFI_MAC_ADDR="$(ifconfig eth0 | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}' | tr ":" "-")"
 	echo MAC is $WIFI_MAC_ADDR
-	nmcli con add type wifi ifname $NM_SYSCON_DEV_WIFIAP con-name $NM_SYSCON_NAME_WIFIAP autoconnect no ssid ${APN_SSIDNAME}_${WIFI_MAC_ADDR}
+	nmcli con add type wifi ifname $NM_SYSCON_DEV_WIFIAP con-name $NM_SYSCON_NAME_WIFIAP autoconnect no ssid ${APN_SSIDNAME}
 	nmcli con modify $NM_SYSCON_NAME_WIFIAP 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
 	nmcli con modify $NM_SYSCON_NAME_WIFIAP wifi-sec.key-mgmt wpa-psk
 	nmcli con modify $NM_SYSCON_NAME_WIFIAP wifi-sec.psk $ACCESSPASS
 	nmcli connection modify $NM_SYSCON_NAME_WIFIAP ipv4.addresses 19.168.1.1/24
 	nmcli con up $NM_SYSCON_NAME_WIFIAP
+	nmcli con modify $NM_SYSCON_NAME_WIFIAP connection.autoconnect yes
 }
 
 nm_online() {
